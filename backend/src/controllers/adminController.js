@@ -1,7 +1,8 @@
-import { Couple, Sufgania, Vote, Comment, Settings } from '../models/index.js';
+import { Couple, Sufgania, Vote, Comment, Settings, Activity } from '../models/index.js';
 import { generateUniqueCode } from '../utils/codeGenerator.js';
 import { ApiError, asyncHandler } from '../utils/errorHandler.js';
 import { calculateRankings } from '../services/rankingService.js';
+import { getRecentActivities, logActivity } from '../services/activityService.js';
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -42,6 +43,14 @@ export const createCouple = asyncHandler(async (req, res) => {
     coupleName,
     loginCode,
   });
+
+  // Log activity
+  await logActivity(
+    'couple_created',
+    'Admin',
+    `created couple "${coupleName}"`,
+    { coupleId: couple._id }
+  );
 
   res.status(201).json({
     success: true,
@@ -171,6 +180,14 @@ export const createSufgania = asyncHandler(async (req, res) => {
   // Reload with couple data
   await sufgania.populate('couple', '_id coupleName');
 
+  // Log activity
+  await logActivity(
+    'sufgania_created',
+    'Admin',
+    `created sufgania "${name}" for ${couple.coupleName}`,
+    { sufganiaId: sufgania._id, coupleId }
+  );
+
   res.status(201).json({
     success: true,
     data: sufgania,
@@ -264,6 +281,17 @@ export const uploadSufganiaPhoto = asyncHandler(async (req, res) => {
   sufgania.photoUrl = `/uploads/${req.file.filename}`;
   await sufgania.save();
 
+  // Reload with couple data
+  await sufgania.populate('couple', '_id coupleName');
+
+  // Log activity
+  await logActivity(
+    'photo_uploaded',
+    'Admin',
+    `uploaded photo for sufgania "${sufgania.name}"`,
+    { sufganiaId: sufgania._id }
+  );
+
   res.json({
     success: true,
     data: sufgania,
@@ -332,6 +360,13 @@ export const openVoting = asyncHandler(async (req, res) => {
   settings.votingOpen = true;
   await settings.save();
 
+  // Log activity
+  await logActivity(
+    'voting_opened',
+    'Admin',
+    'opened voting'
+  );
+
   res.json({
     success: true,
     message: 'Voting opened',
@@ -347,6 +382,13 @@ export const closeVoting = asyncHandler(async (req, res) => {
   settings.votingOpen = false;
   await settings.save();
 
+  // Log activity
+  await logActivity(
+    'voting_closed',
+    'Admin',
+    'closed voting'
+  );
+
   res.json({
     success: true,
     message: 'Voting closed',
@@ -361,6 +403,13 @@ export const publishResults = asyncHandler(async (req, res) => {
   const settings = await getOrCreateSettings();
   settings.resultsPublished = true;
   await settings.save();
+
+  // Log activity
+  await logActivity(
+    'results_published',
+    'Admin',
+    'published results'
+  );
 
   res.json({
     success: true,
@@ -396,6 +445,40 @@ export const getSettings = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * Set voting end time
+ */
+export const setVotingEndTime = asyncHandler(async (req, res) => {
+  const { votingEndsAt } = req.body;
+
+  if (!votingEndsAt) {
+    throw new ApiError(400, 'Voting end time is required');
+  }
+
+  const settings = await getOrCreateSettings();
+  settings.votingEndsAt = new Date(votingEndsAt);
+  await settings.save();
+
+  res.json({
+    success: true,
+    message: 'Voting end time set',
+    data: settings,
+  });
+});
+
+/**
+ * Get recent activities
+ */
+export const getActivities = asyncHandler(async (req, res) => {
+  const limit = parseInt(req.query.limit) || 20;
+  const activities = await getRecentActivities(limit);
+
+  res.json({
+    success: true,
+    data: activities,
+  });
+});
+
 export default {
   getAllCouples,
   createCouple,
@@ -414,4 +497,6 @@ export default {
   publishResults,
   unpublishResults,
   getSettings,
+  setVotingEndTime,
+  getActivities,
 };

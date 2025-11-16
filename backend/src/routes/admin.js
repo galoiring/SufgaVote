@@ -18,6 +18,8 @@ import {
   publishResults,
   unpublishResults,
   getSettings,
+  setVotingEndTime,
+  getActivities,
 } from '../controllers/adminController.js';
 import { verifyToken, isAdmin } from '../middleware/auth.js';
 import upload from '../middleware/upload.js';
@@ -87,7 +89,11 @@ router.get('/comments', getAllComments);
 router.get('/settings', getSettings);
 router.post('/voting/open', openVoting);
 router.post('/voting/close', closeVoting);
+router.post('/voting/end-time', setVotingEndTime);
 router.post('/results/publish', publishResults);
 router.post('/results/unpublish', unpublishResults);
+
+// ===== Activities =====
+router.get('/activities', getActivities);
 
 export default router;

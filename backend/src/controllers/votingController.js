@@ -1,5 +1,6 @@
 import { Comment, Sufgania } from '../models/index.js';
 import { ApiError, asyncHandler } from '../utils/errorHandler.js';
+import { logActivity } from '../services/activityService.js';
 import {
   getVotableSufganiot,
   getCoupleVotes,
@@ -62,6 +63,14 @@ export const submitRankings = asyncHandler(async (req, res) => {
 
   const votes = await submitCategoryRankings(coupleId, category, rankings);
 
+  // Log activity
+  await logActivity(
+    'vote',
+    req.user.coupleName,
+    `submitted rankings for ${category}`,
+    { category, coupleId }
+  );
+
   res.json({
     success: true,
     message: `Rankings submitted for ${category}`,
@@ -114,8 +123,16 @@ export const addComment = asyncHandler(async (req, res) => {
       runValidators: true,
     }
   );
-  
+
   const created = !comment.createdAt || comment.createdAt.getTime() === comment.updatedAt.getTime();
+
+  // Log activity
+  await logActivity(
+    'comment',
+    req.user.coupleName,
+    `${created ? 'added' : 'updated'} a comment on ${sufgania.name}`,
+    { sufganiaId, coupleId }
+  );
 
   res.json({
     success: true,

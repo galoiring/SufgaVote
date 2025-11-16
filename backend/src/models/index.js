@@ -4,6 +4,7 @@ import Sufgania from './Sufgania.js';
 import Vote from './Vote.js';
 import Comment from './Comment.js';
 import Settings from './Settings.js';
+import Activity from './Activity.js';
 
 // No need for explicit associations in Mongoose
 // Relationships are defined in schemas via virtuals and refs
@@ -14,4 +15,5 @@ export {
   Vote,
   Comment,
   Settings,
+  Activity,
 };

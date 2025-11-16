@@ -10,6 +10,10 @@ const settingsSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    votingEndsAt: {
+      type: Date,
+      default: null, // null means no deadline set
+    },
   },
   {
     timestamps: true,

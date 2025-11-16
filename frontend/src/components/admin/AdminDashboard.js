@@ -9,6 +9,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import { Toggle } from '../ui/toggle';
 import { toast } from 'sonner';
 import { getImageUrl } from '../../utils/imageUtils';
+import LiveActivityFeed from './LiveActivityFeed';
+import VotingCountdown from './VotingCountdown';
+import ResultsValidator from './ResultsValidator';
 import {
   BarChart,
   Bar,
@@ -360,6 +363,20 @@ const AdminDashboard = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Live Features Grid */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <LiveActivityFeed />
+          <div className="space-y-6">
+            <VotingCountdown votingEndsAt={settings?.votingEndsAt} votingOpen={settings?.votingOpen} />
+            <ResultsValidator
+              couples={couples}
+              sufganiot={sufganiot}
+              votingOpen={settings?.votingOpen}
+              onPublish={handleToggleResults}
+            />
+          </div>
+        </div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
