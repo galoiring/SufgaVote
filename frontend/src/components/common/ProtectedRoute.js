@@ -1,0 +1,32 @@
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
+const ProtectedRoute = ({ children, requireAdmin = false, requireCouple = false }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="loading">
+        <div className="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (requireAdmin && user.role !== 'admin') {
+    return <Navigate to="/voting" replace />;
+  }
+
+  if (requireCouple && user.role !== 'couple') {
+    return <Navigate to="/admin" replace />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoute;
