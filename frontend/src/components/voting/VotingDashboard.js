@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { votingAPI, resultsAPI, adminAPI } from '../../services/api';
+import { votingAPI, resultsAPI } from '../../services/api';
 import { getImageUrl } from '../../utils/imageUtils';
 import { toast } from 'sonner';
 import VotingCountdownBanner from './VotingCountdownBanner';
@@ -43,14 +43,13 @@ const VotingDashboard = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [statusRes, sufganiotRes, settingsRes] = await Promise.all([
+      const [statusRes, sufganiotRes] = await Promise.all([
         votingAPI.getStatus(),
         votingAPI.getSufganiot(),
-        adminAPI.getSettings(),
       ]);
 
       setVotingOpen(statusRes.data.data.votingOpen);
-      setVotingEndsAt(settingsRes.data.data.votingEndsAt);
+      setVotingEndsAt(statusRes.data.data.votingEndsAt);
       const sufganiotData = sufganiotRes.data.data;
       setSufganiot(sufganiotData);
 

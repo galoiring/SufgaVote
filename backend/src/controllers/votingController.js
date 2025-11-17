@@ -1,4 +1,4 @@
-import { Comment, Sufgania } from '../models/index.js';
+import { Comment, Sufgania, Settings } from '../models/index.js';
 import { ApiError, asyncHandler } from '../utils/errorHandler.js';
 import { logActivity } from '../services/activityService.js';
 import {
@@ -14,10 +14,15 @@ import {
 export const getVotingStatus = asyncHandler(async (req, res) => {
   const votingOpen = await isVotingOpen();
 
+  // Get voting end time (public info)
+  const settings = await Settings.findOne();
+  const votingEndsAt = settings?.votingEndsAt || null;
+
   res.json({
     success: true,
     data: {
       votingOpen,
+      votingEndsAt,
     },
   });
 });
