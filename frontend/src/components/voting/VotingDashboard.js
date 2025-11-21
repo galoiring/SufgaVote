@@ -15,12 +15,10 @@ import {
   LogOut,
   CandyCane,
   ImageIcon,
-  Medal,
 } from 'lucide-react';
 
 const VotingDashboard = () => {
   const [category, setCategory] = useState('taste');
-  const [sufganiot, setSufganiot] = useState([]);
   const [rankings, setRankings] = useState({
     taste: [],
     creativity: [],
@@ -51,7 +49,6 @@ const VotingDashboard = () => {
       setVotingOpen(statusRes.data.data.votingOpen);
       setVotingEndsAt(statusRes.data.data.votingEndsAt);
       const sufganiotData = sufganiotRes.data.data;
-      setSufganiot(sufganiotData);
 
       // Load existing votes
       const votesRes = await votingAPI.getMyVotes();
