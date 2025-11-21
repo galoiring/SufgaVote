@@ -1,16 +1,402 @@
-# Deployment Guide
+# SufgaVote Deployment Guide - Render + Netlify + MongoDB
 
-This guide covers deploying SufgaVote to production on various cloud platforms.
+**Recommended Setup**: MongoDB Atlas (database) + Render (backend) + Netlify (frontend)
 
-## Option 1: Railway (Recommended - Easiest)
+This guide provides step-by-step instructions to deploy your SufgaVote application completely for free!
 
-Railway provides free PostgreSQL and easy deployment from GitHub.
+## 📋 Prerequisites
 
-### Prerequisites
-- GitHub account
-- Railway account (sign up at [railway.app](https://railway.app))
+1. ✅ GitHub account with your SufgaVote repository
+2. ✅ MongoDB Atlas account (free tier) - [Sign up here](https://www.mongodb.com/cloud/atlas/register)
+3. ✅ Render account (free tier) - [Sign up here](https://render.com)
+4. ✅ Netlify account (free tier) - [Sign up here](https://netlify.com)
 
-### Steps
+---
+
+## Part 1: MongoDB Atlas Setup (5 minutes)
+
+### Step 1: Create MongoDB Database
+
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Click **"Build a Database"** → Choose **"M0 FREE"** tier
+3. Select a cloud provider and region (choose closest to you)
+4. Click **"Create Cluster"**
+
+### Step 2: Configure Database Access
+
+1. **Create Database User**:
+   - Go to **Database Access** (left sidebar)
+   - Click **"Add New Database User"**
+   - Username: `sufgavote_admin` (or anything you want)
+   - Password: Click **"Autogenerate Secure Password"** → **SAVE THIS PASSWORD!**
+   - Database User Privileges: **"Read and write to any database"**
+   - Click **"Add User"**
+
+2. **Whitelist IP Addresses**:
+   - Go to **Network Access** (left sidebar)
+   - Click **"Add IP Address"**
+   - Click **"Allow Access from Anywhere"** (0.0.0.0/0)
+   - Click **"Confirm"**
+
+### Step 3: Get Connection String
+
+1. Go to **Database** → Click **"Connect"**
+2. Choose **"Connect your application"**
+3. Copy the connection string (looks like):
+   ```
+   mongodb+srv://sufgavote_admin:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+   ```
+4. **Replace `<password>`** with your actual password
+5. **Add database name** to the connection string:
+   ```
+   mongodb+srv://sufgavote_admin:YourPassword@cluster0.xxxxx.mongodb.net/sufgavote?retryWrites=true&w=majority
+   ```
+6. **SAVE THIS CONNECTION STRING** - you'll need it for Render!
+
+---
+
+## Part 2: Backend Deployment to Render (10 minutes)
+
+### Step 1: Create Render Account & Connect GitHub
+
+1. Go to [Render.com](https://render.com) → Sign up with GitHub
+2. Authorize Render to access your GitHub account
+
+### Step 2: Create Web Service
+
+1. On Render dashboard, click **"New +"** → **"Web Service"**
+2. Connect your GitHub repository: **SufgaVote**
+3. Click **"Connect"**
+
+### Step 3: Configure Build Settings
+
+Fill in these settings:
+
+| Setting | Value |
+|---------|-------|
+| **Name** | `sufgavote-api` (or any name you want) |
+| **Region** | Choose closest to you |
+| **Branch** | `main` |
+| **Root Directory** | `backend` |
+| **Runtime** | `Node` |
+| **Build Command** | `npm install` |
+| **Start Command** | `npm start` |
+| **Instance Type** | `Free` |
+
+### Step 4: Set Environment Variables
+
+Click **"Advanced"** → **"Add Environment Variable"** for each:
+
+| Key | Value | Example |
+|-----|-------|---------|
+| `NODE_ENV` | `production` | `production` |
+| `MONGODB_URI` | Your MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/sufgavote` |
+| `JWT_SECRET` | Any random secure string (at least 32 characters) | `your-super-secret-jwt-key-change-this-12345` |
+| `ADMIN_USERNAME` | Your desired admin username | `admin` |
+| `ADMIN_PASSWORD` | Your desired admin password | `SecureAdminPass123!` |
+| `PORT` | `3001` | `3001` |
+| `FRONTEND_URL` | Leave blank for now, will add after Netlify | (will add later) |
+
+**Important Notes**:
+- Save your `ADMIN_USERNAME` and `ADMIN_PASSWORD` somewhere safe - you'll need these to login!
+- Keep the `JWT_SECRET` secure and random (at least 32 characters)
+
+### Step 5: Deploy Backend!
+
+1. Click **"Create Web Service"**
+2. Wait 3-5 minutes for deployment (watch the build logs)
+3. Once deployed, you'll see: ✅ **"Live"** with a green indicator
+4. **COPY YOUR BACKEND URL** - it will look like: `https://sufgavote-api.onrender.com`
+
+### Step 6: Test Backend
+
+Open your backend URL in browser: `https://your-backend-url.onrender.com/api/health`
+
+You should see:
+```json
+{"status":"OK","timestamp":"2025-01-21T..."}
+```
+
+✅ **Backend is live!**
+
+> **Note about Free Tier Spindown**: Render free tier spins down after 15 minutes of inactivity. Before your voting event starts, open your backend URL to wake it up (takes ~30 seconds). Keep the admin dashboard open during the event to maintain activity.
+
+---
+
+## Part 3: Frontend Deployment to Netlify (10 minutes)
+
+### Step 1: Create Netlify Account
+
+1. Go to [Netlify.com](https://netlify.com)
+2. Sign up with GitHub
+3. Authorize Netlify to access your repositories
+
+### Step 2: Deploy Site
+
+1. Click **"Add new site"** → **"Import an existing project"**
+2. Choose **"Deploy with GitHub"**
+3. Select your **SufgaVote** repository
+4. Configure build settings:
+
+| Setting | Value |
+|---------|-------|
+| **Base directory** | `frontend` |
+| **Build command** | `npm run build` |
+| **Publish directory** | `frontend/build` |
+| **Production branch** | `main` |
+
+### Step 3: Set Environment Variables
+
+Before deploying, click **"Show advanced"** → **"New variable"**:
+
+| Key | Value |
+|-----|-------|
+| `REACT_APP_API_URL` | `https://your-render-backend.onrender.com/api` |
+| `NODE_VERSION` | `18` |
+
+**IMPORTANT**: Replace `your-render-backend.onrender.com` with YOUR actual Render URL from Part 2!
+
+**Example**:
+```
+REACT_APP_API_URL=https://sufgavote-api.onrender.com/api
+```
+
+Make sure to include `/api` at the end!
+
+### Step 4: Deploy Frontend!
+
+1. Click **"Deploy site"**
+2. Wait 2-3 minutes for build to complete (watch the deploy logs)
+3. You'll get a random URL like: `https://random-name-12345.netlify.app`
+
+### Step 5: Customize Domain (Optional)
+
+1. Go to **Site settings** → **Domain management**
+2. Click **"Options"** → **"Edit site name"**
+3. Change to something like: `sufgavote` → Get URL: `https://sufgavote.netlify.app`
+
+✅ **Frontend is live!**
+
+---
+
+## Part 4: Configure CORS (IMPORTANT!)
+
+Now that you have your Netlify URL, you need to tell your backend to accept requests from it.
+
+### Update Backend Environment Variable
+
+1. Go back to [Render Dashboard](https://dashboard.render.com)
+2. Click on your **sufgavote-api** service
+3. Go to **"Environment"** tab
+4. Find `FRONTEND_URL` (or add it if you skipped it earlier)
+5. Set it to your Netlify URL:
+   ```
+   https://your-site-name.netlify.app
+   ```
+6. Click **"Save Changes"**
+7. Your backend will automatically redeploy (takes 1-2 minutes)
+
+**Important**: Don't include `/api` or trailing slash in `FRONTEND_URL`!
+
+✅ **CORS configured!**
+
+---
+
+## Part 5: Test Your Deployment! 🎉
+
+### 1. Open Your Netlify Site
+
+Visit: `https://your-site-name.netlify.app`
+
+### 2. Login as Admin
+
+1. Click **"Admin Login"**
+2. Use the credentials you set in Render (`ADMIN_USERNAME` and `ADMIN_PASSWORD`)
+3. You should see the admin dashboard!
+
+### 3. Create Test Couple
+
+1. Click **"Couples"** tab
+2. Click **"Add Couple"**
+3. Create a test couple with:
+   - Couple name: `Test Couple`
+   - Password: `test123`
+4. Click **"Create"**
+
+### 4. Test Couple Login
+
+1. Logout (or open incognito window)
+2. Go to your Netlify site
+3. Login as the test couple
+4. You should see the voting dashboard!
+
+### 5. Create Sufgania (Optional)
+
+1. Login as admin
+2. Go to **"Sufganiot"** tab
+3. Create a test sufgania
+4. Upload a photo
+5. Check if the couple can see it in voting page!
+
+---
+
+## 🎯 Quick Reference
+
+### URLs to Bookmark
+
+- **Frontend (Netlify)**: `https://your-site-name.netlify.app`
+- **Backend (Render)**: `https://your-backend.onrender.com`
+- **MongoDB**: https://cloud.mongodb.com
+
+### Admin Credentials
+
+- Username: (what you set in `ADMIN_USERNAME`)
+- Password: (what you set in `ADMIN_PASSWORD`)
+
+### Environment Variables Summary
+
+**Render (Backend)**:
+```env
+NODE_ENV=production
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET=your-secret-key
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-admin-password
+PORT=3001
+FRONTEND_URL=https://your-netlify-site.netlify.app
+```
+
+**Netlify (Frontend)**:
+```env
+REACT_APP_API_URL=https://your-render-backend.onrender.com/api
+NODE_VERSION=18
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### Backend won't start
+- Check Render build logs for errors
+- Verify MongoDB connection string is correct
+- Ensure all environment variables are set
+
+### Frontend shows "Network Error"
+- Check if `REACT_APP_API_URL` is correct in Netlify
+- Make sure it ends with `/api`
+- Verify `FRONTEND_URL` is set correctly in Render
+- Wait for backend to wake up if it was sleeping (~30 seconds)
+
+### CORS Errors
+- Double-check `FRONTEND_URL` in Render matches your Netlify URL exactly
+- No trailing slashes!
+- Backend needs to redeploy after changing env vars
+
+### Images not loading
+- Check if images uploaded successfully in admin panel
+- Verify backend URL is correct
+- Images are stored in Render's ephemeral filesystem (will persist during uptime)
+
+### Login fails
+- Check credentials match what's in Render environment variables
+- Check browser console for errors
+- Verify backend is awake and responding
+
+---
+
+## 💡 Tips for Voting Event Day
+
+### Before Event Starts (30 minutes prior):
+
+1. **Wake up your backend**:
+   - Open `https://your-backend.onrender.com/api/health` in browser
+   - Wait 30 seconds for it to wake up
+   - You should see: `{"status":"OK",...}`
+
+2. **Test everything**:
+   - Admin login ✓
+   - Couple login ✓
+   - Voting page loads ✓
+   - Images display ✓
+
+3. **Keep admin dashboard open**:
+   - This generates activity and prevents spindown
+   - Monitor live activity feed during event
+
+### During Event:
+
+- Admin dashboard will keep backend alive with activity feed polling
+- If you notice slowness, check if backend spun down
+- Can open backend URL to wake it up again if needed
+
+### After Event:
+
+- Results stay in MongoDB (permanent)
+- Can close voting in admin panel
+- Publish results when ready
+- Can pause/delete Render service to save resources until next year
+
+---
+
+## 🚀 Continuous Deployment
+
+Both Render and Netlify are connected to your GitHub repository:
+
+- **Push to `main` branch** → Automatic deployment to production
+- **Create pull request** → Netlify creates preview deployment
+- Changes take 2-5 minutes to deploy
+
+---
+
+## 💰 Cost Breakdown
+
+- **MongoDB Atlas (M0 Free)**: $0/month ✓
+- **Render (Free Tier)**: $0/month ✓
+- **Netlify (Free Tier)**: $0/month ✓
+
+**Total: $0/month!** 🎉
+
+Free tier limitations:
+- MongoDB: 512MB storage, 100 connections
+- Render: Spins down after 15 min inactivity, 750 hours/month
+- Netlify: 100GB bandwidth, 300 build minutes/month
+
+Perfect for a voting event with ~50-100 participants!
+
+---
+
+## 📚 Deployment Checklist
+
+1. ✅ Deploy backend to Render
+2. ✅ Deploy frontend to Netlify
+3. ✅ Configure CORS
+4. ✅ Test everything
+5. Create real couples and sufganiot
+6. Set voting end time
+7. Announce to participants!
+8. Monitor live activity during event
+9. Close voting when time's up
+10. Review and publish results
+
+---
+
+## 🆘 Need Help?
+
+If you run into issues:
+1. Check the troubleshooting section above
+2. Look at Render/Netlify deployment logs
+3. Check browser console for frontend errors
+4. Verify all environment variables are set correctly
+
+Good luck with your SufgaVote event! 🍩✨
+
+---
+
+# Alternative Deployment Options
+
+The following are alternative deployment options if you prefer other platforms:
+
+## Option A: Railway
 
 1. **Push to GitHub**
    ```bash
