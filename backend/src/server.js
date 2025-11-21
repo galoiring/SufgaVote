@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import config from './config/environment.js';
 import connectDB from './config/database.js';
@@ -79,6 +80,13 @@ app.use((req, res) => {
 // ===== Start Server =====
 const startServer = async () => {
   try {
+    // Ensure uploads directory exists
+    const uploadsDir = path.join(process.cwd(), config.upload.directory);
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+      console.log('✓ Created uploads directory:', uploadsDir);
+    }
+
     // Connect to MongoDB
     await connectDB();
 
