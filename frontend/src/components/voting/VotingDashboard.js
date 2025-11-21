@@ -264,26 +264,29 @@ const VotingDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[radial-gradient(30rem_30rem_at_50%_0%,#22c55e20_0%,transparent_40%),radial-gradient(40rem_40rem_at_50%_110%,#eab30820_0%,transparent_60%),linear-gradient(180deg,#0f172a,#0f172a)] text-slate-50">
-      <div className="mx-auto w-full max-w-[480px] px-4 pb-28">
+    <div className="min-h-screen w-full bg-[radial-gradient(30rem_30rem_at_50%_0%,#22c55e20_0%,transparent_40%),radial-gradient(40rem_40rem_at_50%_110%,#eab30820_0%,transparent_60%),linear-gradient(180deg,#0f172a,#0f172a)] text-slate-50 relative overflow-hidden">
+      {/* Floating Background Particles */}
+      <FloatingParticles />
+
+      <div className="mx-auto w-full max-w-[480px] px-4 pb-28 relative z-10">
         {/* Header */}
         <header className="sticky top-0 z-20 -mx-4 bg-white/5 backdrop-blur-md border-b border-white/10">
           <div className="px-4 py-3 flex items-center gap-3">
-            {/* Logo */}
+            {/* Logo with pulse animation */}
             <div className="flex items-center gap-2">
               <img
                 src="/logo.png"
                 alt="SufgaVote"
-                className="h-10 w-10 rounded-lg object-cover shadow-md"
+                className="h-10 w-10 rounded-lg object-cover shadow-md animate-pulse-slow"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   e.target.nextElementSibling.style.display = 'flex';
                 }}
               />
               <div className="hidden items-center gap-2">
-                <Cookie className="h-4 w-4 text-amber-200" />
-                <Star className="h-4 w-4 text-yellow-300" />
-                <CandyCane className="h-4 w-4 text-rose-300" />
+                <Cookie className="h-4 w-4 text-amber-200 animate-bounce-slow" />
+                <Star className="h-4 w-4 text-yellow-300 animate-spin-slow" />
+                <CandyCane className="h-4 w-4 text-rose-300 animate-wiggle" />
               </div>
             </div>
 
@@ -305,43 +308,44 @@ const VotingDashboard = () => {
             <div className="grid grid-cols-3 gap-2 bg-white/5 border border-white/10 rounded-xl p-1">
               <button
                 onClick={() => setCategory('taste')}
-                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all ${
+                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   category === 'taste'
-                    ? 'bg-blue-500/20 border-blue-300/20 text-slate-50 shadow-[0_0_10px_#3b82f688]'
-                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/5'
+                    ? 'bg-blue-500/20 border-blue-300/20 text-slate-50 shadow-[0_0_10px_#3b82f688] animate-glow-blue'
+                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-blue-200/30'
                 }`}
               >
-                <Star className="h-4 w-4" />
+                <Star className={`h-4 w-4 ${category === 'taste' ? 'animate-spin-slow' : ''}`} />
                 <span className="font-medium">Taste</span>
               </button>
               <button
                 onClick={() => setCategory('creativity')}
-                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all ${
+                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   category === 'creativity'
-                    ? 'bg-pink-500/20 border-pink-300/20 text-slate-50 shadow-[0_0_10px_#ec4899aa]'
-                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/5'
+                    ? 'bg-pink-500/20 border-pink-300/20 text-slate-50 shadow-[0_0_10px_#ec4899aa] animate-glow-pink'
+                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-pink-200/30'
                 }`}
               >
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className={`h-4 w-4 ${category === 'creativity' ? 'animate-pulse' : ''}`} />
                 <span className="font-medium">Creativity</span>
               </button>
               <button
                 onClick={() => setCategory('presentation')}
-                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all ${
+                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   category === 'presentation'
-                    ? 'bg-amber-500/20 border-amber-300/20 text-slate-50 shadow-[0_0_10px_#f59e0baa]'
-                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/5'
+                    ? 'bg-amber-500/20 border-amber-300/20 text-slate-50 shadow-[0_0_10px_#f59e0baa] animate-glow-amber'
+                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-amber-200/30'
                 }`}
               >
-                <Trophy className="h-4 w-4" />
+                <Trophy className={`h-4 w-4 ${category === 'presentation' ? 'animate-bounce-slow' : ''}`} />
                 <span className="font-medium">Presentation</span>
               </button>
             </div>
 
-            {/* Progress bar */}
-            <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            {/* Animated Progress bar */}
+            <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
               <div
-                className="h-full bg-gradient-to-r from-emerald-400 to-green-500 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500 transition-all duration-700 animate-gradient-x relative z-10"
                 style={{ width: `${(Object.keys(rankings).filter(cat => rankings[cat].length > 0).length / 3) * 100}%` }}
               />
             </div>
@@ -387,11 +391,11 @@ const VotingDashboard = () => {
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`flex items-center gap-3 rounded-xl p-3 shadow transition-all ${
+                              className={`flex items-center gap-3 rounded-xl p-3 shadow transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${
                                 snapshot.isDragging
-                                  ? 'bg-white/95 text-slate-900 ring-2 ring-blue-300/60 scale-[1.01]'
+                                  ? 'bg-white/95 text-slate-900 ring-2 ring-blue-300/60 scale-[1.02] rotate-1'
                                   : index === 0
-                                  ? 'relative bg-gradient-to-r from-amber-50 to-yellow-100 text-slate-900 border border-amber-300 ring-1 ring-amber-300'
+                                  ? 'relative bg-gradient-to-r from-amber-50 to-yellow-100 text-slate-900 border border-amber-300 ring-1 ring-amber-300 animate-pulse-gold'
                                   : index === 1
                                   ? 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-900 border border-slate-200/50'
                                   : index === 2
@@ -458,15 +462,25 @@ const VotingDashboard = () => {
               </DragDropContext>
             </div>
 
-            {/* Sticky Save CTA */}
+            {/* Sticky Save CTA with ripple effect */}
             <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#101726] via-[#101726]/95 to-transparent">
               <div className="mx-auto max-w-[480px] px-4 py-4">
                 <button
                   onClick={handleSaveRankings}
                   disabled={!votingOpen || saving}
-                  className="w-full h-12 rounded-xl text-base shadow-lg bg-blue-500 hover:bg-blue-500/90 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full h-12 rounded-xl text-base shadow-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
                 >
-                  {saving ? 'Saving...' : `Save ${category} rankings`}
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {saving ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      `Save ${category} rankings`
+                    )}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 </button>
               </div>
             </div>
@@ -485,6 +499,37 @@ const VotingDashboard = () => {
     </div>
   );
 };
+
+// Floating Particles component
+function FloatingParticles() {
+  const particles = Array.from({ length: 15 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    delay: Math.random() * 5,
+    duration: 10 + Math.random() * 10,
+    size: 8 + Math.random() * 16,
+  }));
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute animate-float opacity-20"
+          style={{
+            left: `${p.left}%`,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${p.duration}s`,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+          }}
+        >
+          <Cookie className="w-full h-full text-amber-300" />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 // Confetti component
 function ConfettiBurst() {
