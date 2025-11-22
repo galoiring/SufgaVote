@@ -19,13 +19,11 @@ function App() {
           {/* Homepage is couple login */}
           <Route path="/" element={<CoupleLogin />} />
 
-          {/* Admin login at specific URL */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-
+          {/* Admin route - shows login if not authenticated, dashboard if authenticated */}
           <Route
-            path="/admin/*"
+            path="/admin"
             element={
-              <ProtectedRoute requireAdmin>
+              <ProtectedRoute requireAdmin loginComponent={<AdminLogin />}>
                 <AdminDashboard />
               </ProtectedRoute>
             }

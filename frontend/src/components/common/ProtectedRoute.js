@@ -2,7 +2,12 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
-const ProtectedRoute = ({ children, requireAdmin = false, requireCouple = false }) => {
+const ProtectedRoute = ({
+  children,
+  requireAdmin = false,
+  requireCouple = false,
+  loginComponent = null
+}) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -14,10 +19,15 @@ const ProtectedRoute = ({ children, requireAdmin = false, requireCouple = false 
     );
   }
 
+  // If not logged in, show custom login component or redirect
   if (!user) {
-    return <Navigate to="/login" replace />;
+    if (loginComponent) {
+      return loginComponent;
+    }
+    return <Navigate to="/" replace />;
   }
 
+  // If logged in but wrong role
   if (requireAdmin && user.role !== 'admin') {
     return <Navigate to="/voting" replace />;
   }
