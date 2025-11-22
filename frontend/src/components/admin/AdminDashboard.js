@@ -469,6 +469,7 @@ const AdminDashboard = () => {
             <Card className="bg-white/10 backdrop-blur-xl border-white/10">
               <CardHeader>
                 <CardTitle className="text-slate-100">Add New Sufgania</CardTitle>
+                <p className="text-sm text-slate-300 mt-1">Each couple can submit only one sufgania</p>
               </CardHeader>
               <CardContent className="grid gap-4">
                 <div className="grid gap-3 md:grid-cols-2">
@@ -493,17 +494,41 @@ const AdminDashboard = () => {
                       className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Select couple...</option>
-                      {couples.map((c) => (
-                        <option key={c._id || c.id} value={c._id || c.id}>
-                          {c.coupleName}
-                        </option>
-                      ))}
+                      {couples
+                        .filter((c) => {
+                          // Only show couples who don't have a sufgania yet
+                          const hasSufgania = sufganiot.some(
+                            (s) => (s.couple?._id || s.couple?.id || s.coupleId) === (c._id || c.id)
+                          );
+                          return !hasSufgania;
+                        })
+                        .map((c) => (
+                          <option key={c._id || c.id} value={c._id || c.id}>
+                            {c.coupleName}
+                          </option>
+                        ))}
                     </select>
+                    {couples.filter((c) => {
+                      const hasSufgania = sufganiot.some(
+                        (s) => (s.couple?._id || s.couple?.id || s.coupleId) === (c._id || c.id)
+                      );
+                      return !hasSufgania;
+                    }).length === 0 && (
+                      <small className="text-amber-300 text-sm mt-1 block">
+                        All couples already have a sufgania!
+                      </small>
+                    )}
                   </div>
                 </div>
                 <Button
                   onClick={handleAddSufgania}
                   className="rounded-xl bg-blue-500/30 hover:bg-blue-400/40"
+                  disabled={couples.filter((c) => {
+                    const hasSufgania = sufganiot.some(
+                      (s) => (s.couple?._id || s.couple?.id || s.coupleId) === (c._id || c.id)
+                    );
+                    return !hasSufgania;
+                  }).length === 0}
                 >
                   Add Sufgania
                 </Button>
