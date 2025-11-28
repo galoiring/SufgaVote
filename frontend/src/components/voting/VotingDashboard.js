@@ -9,12 +9,10 @@ import VotingCountdownBanner from './VotingCountdownBanner';
 import {
   Cookie,
   Star,
-  Sparkles,
-  Trophy,
-  GripVertical,
   LogOut,
   CandyCane,
   ImageIcon,
+  Flame,
 } from 'lucide-react';
 
 const VotingDashboard = () => {
@@ -261,7 +259,7 @@ const VotingDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[radial-gradient(30rem_30rem_at_50%_0%,#22c55e20_0%,transparent_40%),radial-gradient(40rem_40rem_at_50%_110%,#eab30820_0%,transparent_60%),linear-gradient(180deg,#0f172a,#0f172a)] text-slate-50 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-b from-[#0a1628] via-[#152238] to-[#1a2744] text-slate-50 relative overflow-hidden">
       {/* Floating Background Particles */}
       <FloatingParticles />
 
@@ -300,41 +298,53 @@ const VotingDashboard = () => {
             </button>
           </div>
 
-          {/* Sticky category bar + progress */}
+          {/* Sticky category bar + progress - Menorah Style */}
           <div className="px-4 pb-3">
             <div className="grid grid-cols-3 gap-2 bg-white/5 border border-white/10 rounded-xl p-1">
               <button
                 onClick={() => setCategory('taste')}
-                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   category === 'taste'
-                    ? 'bg-blue-500/20 border-blue-300/20 text-slate-50 shadow-[0_0_10px_#3b82f688] animate-glow-blue'
+                    ? 'bg-blue-500/20 border-blue-300/20 text-slate-50'
                     : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-blue-200/30'
                 }`}
               >
-                <Star className={`h-4 w-4 ${category === 'taste' ? 'animate-spin-slow' : ''}`} />
-                <span className="font-medium">Taste</span>
+                <Flame className={`h-5 w-5 ${
+                  category === 'taste'
+                    ? 'fill-yellow-400 text-orange-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+                    : 'text-slate-600'
+                }`} />
+                <span className="font-medium text-xs">Taste</span>
               </button>
               <button
                 onClick={() => setCategory('creativity')}
-                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   category === 'creativity'
-                    ? 'bg-pink-500/20 border-pink-300/20 text-slate-50 shadow-[0_0_10px_#ec4899aa] animate-glow-pink'
+                    ? 'bg-pink-500/20 border-pink-300/20 text-slate-50'
                     : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-pink-200/30'
                 }`}
               >
-                <Sparkles className={`h-4 w-4 ${category === 'creativity' ? 'animate-pulse' : ''}`} />
-                <span className="font-medium">Creativity</span>
+                <Flame className={`h-5 w-5 ${
+                  category === 'creativity'
+                    ? 'fill-yellow-400 text-orange-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+                    : 'text-slate-600'
+                }`} />
+                <span className="font-medium text-xs">Creativity</span>
               </button>
               <button
                 onClick={() => setCategory('presentation')}
-                className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   category === 'presentation'
-                    ? 'bg-amber-500/20 border-amber-300/20 text-slate-50 shadow-[0_0_10px_#f59e0baa] animate-glow-amber'
+                    ? 'bg-amber-500/20 border-amber-300/20 text-slate-50'
                     : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-amber-200/30'
                 }`}
               >
-                <Trophy className={`h-4 w-4 ${category === 'presentation' ? 'animate-bounce-slow' : ''}`} />
-                <span className="font-medium">Presentation</span>
+                <Flame className={`h-5 w-5 ${
+                  category === 'presentation'
+                    ? 'fill-yellow-400 text-orange-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+                    : 'text-slate-600'
+                }`} />
+                <span className="font-medium text-xs">Presentation</span>
               </button>
             </div>
 
@@ -351,6 +361,14 @@ const VotingDashboard = () => {
           {/* Countdown banner */}
           <VotingCountdownBanner votingEndsAt={votingEndsAt} votingOpen={votingOpen} />
         </header>
+
+        {/* Jewish Santa Mascot */}
+        <div className="text-center mb-2 relative pt-4">
+          <div className="text-6xl drop-shadow-lg filter animate-bounce-slow">🎅</div>
+          {/* Kippah overlay */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 -mt-1 w-6 h-3 bg-blue-600 rounded-t-full opacity-90"></div>
+          <p className="text-blue-200 font-medium text-xs mt-1">"Ho Ho... Oy Vey! Vote now!"</p>
+        </div>
 
         {/* Page title */}
         <div className="mt-4 text-center">
@@ -390,26 +408,20 @@ const VotingDashboard = () => {
                               {...provided.draggableProps}
                               className={`flex items-center gap-3 rounded-xl p-3 shadow transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${
                                 snapshot.isDragging
-                                  ? 'bg-white/95 text-slate-900 ring-2 ring-blue-300/60 scale-[1.02] rotate-1'
-                                  : index === 0
-                                  ? 'relative bg-gradient-to-r from-amber-50 to-yellow-100 text-slate-900 border border-amber-300 ring-1 ring-amber-300 animate-pulse-gold'
-                                  : index === 1
-                                  ? 'bg-gradient-to-r from-slate-50 to-slate-100 text-slate-900 border border-slate-200/50'
-                                  : index === 2
-                                  ? 'bg-gradient-to-r from-orange-50 to-orange-100 text-slate-900 border border-orange-200/50'
-                                  : 'bg-white/95 text-slate-900'
+                                  ? 'backdrop-blur-md bg-white/20 border-2 border-white/40 text-white ring-2 ring-blue-300/60 scale-[1.02] rotate-1'
+                                  : 'backdrop-blur-md bg-white/10 border border-white/20 text-white'
                               }`}
                             >
                               <div className={`rounded-lg px-2 py-1 text-base font-bold shrink-0 border ${
                                 index === 0
-                                  ? 'bg-gradient-to-b from-yellow-100 to-amber-100 text-amber-700 border-amber-300'
+                                  ? 'bg-gradient-to-b from-yellow-100/20 to-amber-100/20 text-amber-200 border-amber-300/30'
                                   : index === 1
-                                  ? 'bg-gradient-to-b from-slate-100 to-slate-200 text-slate-600 border-slate-300'
+                                  ? 'bg-gradient-to-b from-slate-100/20 to-slate-200/20 text-slate-200 border-slate-300/30'
                                   : index === 2
-                                  ? 'bg-gradient-to-b from-orange-100 to-orange-200 text-orange-700 border-orange-300'
-                                  : 'bg-gradient-to-b from-blue-50 to-blue-100 text-blue-600 border-blue-200'
+                                  ? 'bg-gradient-to-b from-orange-100/20 to-orange-200/20 text-orange-200 border-orange-300/30'
+                                  : 'bg-gradient-to-b from-blue-50/20 to-blue-100/20 text-blue-200 border-blue-200/30'
                               }`}>
-                                {index === 0 ? '🏆 #1' : index === 1 ? '🥈 #2' : index === 2 ? '🥉 #3' : `#${index + 1}`}
+                                {index === 0 ? '🏺 #1' : index === 1 ? '🕎 #2' : index === 2 ? '🥔 #3' : `#${index + 1}`}
                               </div>
 
                               {/* Image */}
@@ -433,21 +445,19 @@ const VotingDashboard = () => {
 
                               <div className="flex-1 min-w-0">
                                 <div className="font-semibold leading-tight truncate">{sufgania.name}</div>
-                                <div className="text-[12px] text-slate-600 truncate">
+                                <div className="text-[12px] text-slate-300 truncate">
                                   by {sufgania.couple?.coupleName || 'Unknown'}
                                 </div>
                               </div>
 
-                              <button
+                              <div
                                 {...provided.dragHandleProps}
-                                aria-label="Drag to reorder"
-                                className={`text-slate-400 p-1 -m-1 shrink-0 ${
-                                  votingOpen ? 'hover:text-slate-600' : 'opacity-50 cursor-not-allowed'
+                                className={`text-red-400 hover:text-red-500 cursor-move p-2 ${
+                                  !votingOpen ? 'opacity-50 cursor-not-allowed' : ''
                                 }`}
-                                disabled={!votingOpen}
                               >
-                                <GripVertical className="h-5 w-5" />
-                              </button>
+                                <CandyCane className="w-6 h-6 rotate-180" />
+                              </div>
                             </div>
                           )}
                         </Draggable>
@@ -459,13 +469,13 @@ const VotingDashboard = () => {
               </DragDropContext>
             </div>
 
-            {/* Sticky Save CTA with ripple effect */}
-            <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#101726] via-[#101726]/95 to-transparent">
+            {/* Sticky Save CTA with Christmas style */}
+            <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#0a1628] via-[#0a1628]/95 to-transparent">
               <div className="mx-auto max-w-[480px] px-4 py-4">
                 <button
                   onClick={handleSaveRankings}
                   disabled={!votingOpen || saving}
-                  className="w-full h-12 rounded-xl text-base shadow-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
+                  className="snow-cap w-full h-12 rounded-xl text-base shadow-lg bg-red-600 hover:bg-red-700 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {saving ? (
@@ -474,7 +484,9 @@ const VotingDashboard = () => {
                         Saving...
                       </>
                     ) : (
-                      `Save ${category} rankings`
+                      <>
+                        Send to Santa & Yehuda Maccabi 🚀
+                      </>
                     )}
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
@@ -497,14 +509,16 @@ const VotingDashboard = () => {
   );
 };
 
-// Floating Particles component
+// Floating Particles component - Chrismukkah Edition
 function FloatingParticles() {
-  const particles = Array.from({ length: 15 }, (_, i) => ({
+  const emojis = ['❄️', '🕎', '🧁', '🍬'];
+  const particles = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     left: Math.random() * 100,
     delay: Math.random() * 5,
     duration: 10 + Math.random() * 10,
-    size: 8 + Math.random() * 16,
+    size: 16 + Math.random() * 24,
+    emoji: emojis[i % emojis.length],
   }));
 
   return (
@@ -512,16 +526,15 @@ function FloatingParticles() {
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute animate-float opacity-20"
+          className="absolute animate-snow-fall opacity-30"
           style={{
             left: `${p.left}%`,
             animationDelay: `${p.delay}s`,
             animationDuration: `${p.duration}s`,
-            width: `${p.size}px`,
-            height: `${p.size}px`,
+            fontSize: `${p.size}px`,
           }}
         >
-          <Cookie className="w-full h-full text-amber-300" />
+          {p.emoji}
         </div>
       ))}
     </div>

@@ -273,3 +273,38 @@
 .animate-wiggle {
   animation: wiggle 1s ease-in-out infinite;
 }
+
+/* Chrismukkah Theme Additions */
+@keyframes snow-fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+}
+
+.animate-snow-fall {
+  animation: snow-fall linear infinite;
+}
+
+/* Candy Cane Stripe Pattern for the Button */
+.bg-candy-stripe {
+  background: repeating-linear-gradient(
+    45deg,
+    #dc2626,
+    #dc2626 10px,
+    #ffffff 10px,
+    #ffffff 20px
+  );
+}
+
+/* Snowcap effect for the button */
+.snow-cap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: white;
+  opacity: 0.6;
+  border-radius: 12px 12px 4px 4px;
+  filter: blur(1px);
+}
