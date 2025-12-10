@@ -281,10 +281,10 @@ const VotingDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#0f172a] text-slate-50 relative">
-      <div className="mx-auto w-full max-w-[480px] px-4 pb-28 relative">
-        {/* Header */}
-        <header className="sticky top-0 z-20 -mx-4 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-lg transition-all duration-300">
+    <div className="min-h-screen w-full bg-[#0f172a] text-slate-50">
+      {/* Header */}
+      <header className="sticky top-0 z-20 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-lg transition-all duration-300">
+        <div className="mx-auto w-full max-w-[480px]">
           <div className="px-4 py-3 flex items-center gap-3">
             {/* Logo */}
             <div className="flex items-center gap-2">
@@ -381,8 +381,11 @@ const VotingDashboard = () => {
 
           {/* Countdown banner */}
           <VotingCountdownBanner votingEndsAt={votingEndsAt} votingOpen={votingOpen} />
-        </header>
+        </div>
+      </header>
 
+      {/* Main Content */}
+      <div className="mx-auto w-full max-w-[480px] px-4 pb-28">
         {!votingOpen && (
           <div className="mt-4 p-3 rounded-xl bg-blue-500/10 border border-blue-300/20 text-center text-sm text-blue-200">
             Voting is currently closed
