@@ -39,7 +39,7 @@ router.post(
       .withMessage('Rankings must be a non-empty array'),
     body('rankings.*.sufganiaId')
       .notEmpty()
-      .isUUID()
+      .isMongoId()
       .withMessage('Valid sufgania ID is required'),
     body('rankings.*.rank')
       .notEmpty()
@@ -54,7 +54,7 @@ router.post(
 router.post(
   '/comments',
   [
-    body('sufganiaId').notEmpty().isUUID().withMessage('Valid sufgania ID is required'),
+    body('sufganiaId').notEmpty().isMongoId().withMessage('Valid sufgania ID is required'),
     body('commentText')
       .notEmpty()
       .trim()
