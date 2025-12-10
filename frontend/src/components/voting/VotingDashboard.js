@@ -184,14 +184,8 @@ const VotingDashboard = () => {
                   className="h-10 w-10 rounded-lg object-cover shadow-md"
                   onError={(e) => {
                     e.target.style.display = 'none';
-                    e.target.nextElementSibling.style.display = 'flex';
                   }}
                 />
-                <div className="hidden items-center gap-2">
-                  <Cookie className="h-4 w-4 text-amber-200" />
-                  <Star className="h-4 w-4 text-yellow-300" />
-                  <CandyCane className="h-4 w-4 text-rose-300" />
-                </div>
               </div>
 
               <div className="flex-1 leading-tight">
