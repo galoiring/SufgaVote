@@ -111,12 +111,25 @@ const VotingDashboard = () => {
       return;
     }
 
+    if (rankings[category].length === 0) {
+      toast.error('No items to rank');
+      return;
+    }
+
     setSaving(true);
     try {
-      const rankingsData = rankings[category].map((sufgania, index) => ({
-        sufganiaId: sufgania._id || sufgania.id,
-        rank: index + 1,
-      }));
+      const rankingsData = rankings[category]
+        .filter(sufgania => sufgania && (sufgania._id || sufgania.id))
+        .map((sufgania, index) => ({
+          sufganiaId: sufgania._id || sufgania.id,
+          rank: index + 1,
+        }));
+
+      if (rankingsData.length === 0) {
+        toast.error('Invalid ranking data');
+        setSaving(false);
+        return;
+      }
 
       await votingAPI.submitRankings(category, rankingsData);
 
@@ -312,7 +325,7 @@ const VotingDashboard = () => {
                 {submittedCategories.has('taste') && (
                   <Check className="absolute top-1 right-1 h-3 w-3 text-green-400" />
                 )}
-                <Flame className={`h-5 w-5 ${
+                <Flame className={`h-5 w-5 transition-all duration-200 ${
                   category === 'taste'
                     ? 'fill-blue-400 text-blue-300'
                     : 'text-slate-600'
@@ -330,7 +343,7 @@ const VotingDashboard = () => {
                 {submittedCategories.has('creativity') && (
                   <Check className="absolute top-1 right-1 h-3 w-3 text-green-400" />
                 )}
-                <Sparkles className={`h-5 w-5 ${
+                <Sparkles className={`h-5 w-5 transition-all duration-200 ${
                   category === 'creativity'
                     ? 'fill-pink-400 text-pink-300'
                     : 'text-slate-600'
@@ -348,7 +361,7 @@ const VotingDashboard = () => {
                 {submittedCategories.has('presentation') && (
                   <Check className="absolute top-1 right-1 h-3 w-3 text-green-400" />
                 )}
-                <Trophy className={`h-5 w-5 ${
+                <Trophy className={`h-5 w-5 transition-all duration-200 ${
                   category === 'presentation'
                     ? 'fill-amber-400 text-amber-300'
                     : 'text-slate-600'
