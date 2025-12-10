@@ -13,6 +13,8 @@ import {
   CandyCane,
   ImageIcon,
   Flame,
+  Sparkles,
+  Trophy,
 } from 'lucide-react';
 
 const VotingDashboard = () => {
@@ -324,9 +326,9 @@ const VotingDashboard = () => {
                     : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-pink-200/30'
                 }`}
               >
-                <Flame className={`h-5 w-5 ${
+                <Sparkles className={`h-5 w-5 ${
                   category === 'creativity'
-                    ? 'fill-yellow-400 text-orange-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+                    ? 'fill-pink-400 text-pink-300 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)]'
                     : 'text-slate-600'
                 }`} />
                 <span className="font-medium text-xs">Creativity</span>
@@ -339,9 +341,9 @@ const VotingDashboard = () => {
                     : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-amber-200/30'
                 }`}
               >
-                <Flame className={`h-5 w-5 ${
+                <Trophy className={`h-5 w-5 ${
                   category === 'presentation'
-                    ? 'fill-yellow-400 text-orange-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+                    ? 'fill-amber-400 text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]'
                     : 'text-slate-600'
                 }`} />
                 <span className="font-medium text-xs">Presentation</span>
@@ -406,6 +408,10 @@ const VotingDashboard = () => {
                             <div
                               ref={provided.innerRef}
                               {...provided.draggableProps}
+                              style={{
+                                ...provided.draggableProps.style,
+                                touchAction: 'none',
+                              }}
                               className={`flex items-center gap-3 rounded-xl p-3 shadow transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${
                                 snapshot.isDragging
                                   ? 'backdrop-blur-md bg-white/20 border-2 border-white/40 text-white ring-2 ring-blue-300/60 scale-[1.02] rotate-1'
@@ -452,11 +458,12 @@ const VotingDashboard = () => {
 
                               <div
                                 {...provided.dragHandleProps}
-                                className={`text-red-400 hover:text-red-500 cursor-move p-2 ${
+                                style={{ touchAction: 'none' }}
+                                className={`text-red-400 hover:text-red-500 cursor-move p-3 -m-1 ${
                                   !votingOpen ? 'opacity-50 cursor-not-allowed' : ''
                                 }`}
                               >
-                                <CandyCane className="w-6 h-6 rotate-180" />
+                                <CandyCane className="w-7 h-7 rotate-180" />
                               </div>
                             </div>
                           )}
@@ -481,11 +488,11 @@ const VotingDashboard = () => {
                     {saving ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Saving...
+                        Submitting...
                       </>
                     ) : (
                       <>
-                        Send to Santa & Yehuda Maccabi 🚀
+                        Submit Vote 🚀
                       </>
                     )}
                   </span>
