@@ -7,14 +7,13 @@ import { getImageUrl } from '../../utils/imageUtils';
 import { toast } from 'sonner';
 import VotingCountdownBanner from './VotingCountdownBanner';
 import {
-  Cookie,
-  Star,
   LogOut,
   CandyCane,
   ImageIcon,
   Flame,
   Sparkles,
   Trophy,
+  Check,
 } from 'lucide-react';
 
 const VotingDashboard = () => {
@@ -30,6 +29,7 @@ const VotingDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [submittedCategories, setSubmittedCategories] = useState(new Set());
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -61,17 +61,20 @@ const VotingDashboard = () => {
         presentation: [],
       };
 
+      const submitted = new Set();
       ['taste', 'creativity', 'presentation'].forEach((cat) => {
         if (existingVotes[cat] && existingVotes[cat].length > 0) {
           newRankings[cat] = existingVotes[cat].map((v) =>
             sufganiotData.find((s) => (s._id || s.id) === v.sufganiaId)
           ).filter(Boolean);
+          submitted.add(cat);
         } else {
           newRankings[cat] = [...sufganiotData];
         }
       });
 
       setRankings(newRankings);
+      setSubmittedCategories(submitted);
 
       // Try to load published results
       try {
@@ -116,7 +119,11 @@ const VotingDashboard = () => {
       }));
 
       await votingAPI.submitRankings(category, rankingsData);
-      toast.success(`Rankings saved for ${category}! Thanks for spreading the sweetness! 🍬`);
+
+      // Mark category as submitted
+      setSubmittedCategories(prev => new Set(prev).add(category));
+
+      toast.success(`${category.charAt(0).toUpperCase() + category.slice(1)} rankings saved!`);
 
       // Show confetti
       setShowConfetti(true);
@@ -261,30 +268,21 @@ const VotingDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-[#0a1628] via-[#152238] to-[#1a2744] text-slate-50 relative overflow-hidden">
-      {/* Floating Background Particles */}
-      <FloatingParticles />
-
-      <div className="mx-auto w-full max-w-[480px] px-4 pb-28 relative z-10">
+    <div className="min-h-screen w-full bg-[#0f172a] text-slate-50 relative">
+      <div className="mx-auto w-full max-w-[480px] px-4 pb-28 relative">
         {/* Header */}
-        <header className="sticky top-0 z-20 -mx-4 bg-white/5 backdrop-blur-md border-b border-white/10">
+        <header className="sticky top-0 z-20 -mx-4 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-lg transition-all duration-300">
           <div className="px-4 py-3 flex items-center gap-3">
-            {/* Logo with pulse animation */}
+            {/* Logo */}
             <div className="flex items-center gap-2">
               <img
                 src="/logo.png"
                 alt="SufgaVote"
-                className="h-10 w-10 rounded-lg object-cover shadow-md animate-pulse-slow"
+                className="h-10 w-10 rounded-lg object-cover shadow-md"
                 onError={(e) => {
                   e.target.style.display = 'none';
-                  e.target.nextElementSibling.style.display = 'flex';
                 }}
               />
-              <div className="hidden items-center gap-2">
-                <Cookie className="h-4 w-4 text-amber-200 animate-bounce-slow" />
-                <Star className="h-4 w-4 text-yellow-300 animate-spin-slow" />
-                <CandyCane className="h-4 w-4 text-rose-300 animate-wiggle" />
-              </div>
             </div>
 
             <div className="flex-1 leading-tight">
@@ -300,61 +298,69 @@ const VotingDashboard = () => {
             </button>
           </div>
 
-          {/* Sticky category bar + progress - Menorah Style */}
+          {/* Category tabs */}
           <div className="px-4 pb-3">
             <div className="grid grid-cols-3 gap-2 bg-white/5 border border-white/10 rounded-xl p-1">
               <button
                 onClick={() => setCategory('taste')}
-                className={`flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`relative flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-200 active:scale-95 ${
                   category === 'taste'
                     ? 'bg-blue-500/20 border-blue-300/20 text-slate-50'
-                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-blue-200/30'
+                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10'
                 }`}
               >
+                {submittedCategories.has('taste') && (
+                  <Check className="absolute top-1 right-1 h-3 w-3 text-green-400" />
+                )}
                 <Flame className={`h-5 w-5 ${
                   category === 'taste'
-                    ? 'fill-yellow-400 text-orange-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+                    ? 'fill-blue-400 text-blue-300'
                     : 'text-slate-600'
                 }`} />
                 <span className="font-medium text-xs">Taste</span>
               </button>
               <button
                 onClick={() => setCategory('creativity')}
-                className={`flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`relative flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-200 active:scale-95 ${
                   category === 'creativity'
                     ? 'bg-pink-500/20 border-pink-300/20 text-slate-50'
-                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-pink-200/30'
+                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10'
                 }`}
               >
+                {submittedCategories.has('creativity') && (
+                  <Check className="absolute top-1 right-1 h-3 w-3 text-green-400" />
+                )}
                 <Sparkles className={`h-5 w-5 ${
                   category === 'creativity'
-                    ? 'fill-pink-400 text-pink-300 drop-shadow-[0_0_8px_rgba(236,72,153,0.8)]'
+                    ? 'fill-pink-400 text-pink-300'
                     : 'text-slate-600'
                 }`} />
                 <span className="font-medium text-xs">Creativity</span>
               </button>
               <button
                 onClick={() => setCategory('presentation')}
-                className={`flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+                className={`relative flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-200 active:scale-95 ${
                   category === 'presentation'
                     ? 'bg-amber-500/20 border-amber-300/20 text-slate-50'
-                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10 hover:border-amber-200/30'
+                    : 'border-white/10 bg-white/0 text-slate-200 hover:bg-white/10'
                 }`}
               >
+                {submittedCategories.has('presentation') && (
+                  <Check className="absolute top-1 right-1 h-3 w-3 text-green-400" />
+                )}
                 <Trophy className={`h-5 w-5 ${
                   category === 'presentation'
-                    ? 'fill-amber-400 text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]'
+                    ? 'fill-amber-400 text-amber-300'
                     : 'text-slate-600'
                 }`} />
                 <span className="font-medium text-xs">Presentation</span>
               </button>
             </div>
 
-            {/* Animated Progress bar */}
-            <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+            {/* Progress bar */}
+            <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500 transition-all duration-700 animate-gradient-x relative z-10"
+                className="h-full bg-emerald-500 transition-all duration-500"
                 style={{ width: `${(Object.keys(rankings).filter(cat => rankings[cat].length > 0).length / 3) * 100}%` }}
               />
             </div>
@@ -363,14 +369,6 @@ const VotingDashboard = () => {
           {/* Countdown banner */}
           <VotingCountdownBanner votingEndsAt={votingEndsAt} votingOpen={votingOpen} />
         </header>
-
-        {/* Jewish Santa Mascot & Title */}
-        <div className="text-center mb-1 relative pt-4">
-          <div className="text-5xl drop-shadow-lg filter animate-bounce-slow">🎅</div>
-          {/* Kippah overlay */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 -mt-1 w-6 h-3 bg-blue-600 rounded-t-full opacity-90"></div>
-          <p className="text-blue-200 font-medium text-xs mt-1">"Ho Ho... Oy Vey! Rank them all!"</p>
-        </div>
 
         {!votingOpen && (
           <div className="mt-4 p-3 rounded-xl bg-blue-500/10 border border-blue-300/20 text-center text-sm text-blue-200">
@@ -381,17 +379,30 @@ const VotingDashboard = () => {
         {/* VOTING SECTION */}
         <div className="mt-4 space-y-3">
             {/* Ranking list */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+            <div
+              key={category}
+              className={`bg-white/5 border-2 rounded-2xl p-4 transition-all duration-300 animate-fade-in ${
+                category === 'taste' ? 'border-blue-500/30' :
+                category === 'creativity' ? 'border-pink-500/30' :
+                'border-amber-500/30'
+              }`}
+            >
               <div className="flex items-center justify-between text-xs text-slate-300 mb-3">
                 <span>Drag to reorder • Top = Best</span>
                 <span className="text-slate-200 font-medium">{rankings[category].length} items</span>
               </div>
 
-              <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="rankings">
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
-                      {rankings[category].map((sufgania, index) => (
+              {rankings[category].length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-4xl mb-3">🍩</div>
+                  <p className="text-slate-300 text-sm">No sufganiot available for ranking</p>
+                </div>
+              ) : (
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  <Droppable droppableId="rankings">
+                    {(provided) => (
+                      <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+                        {rankings[category].map((sufgania, index) => (
                         <Draggable
                           key={sufgania._id || sufgania.id}
                           draggableId={sufgania._id || sufgania.id}
@@ -463,11 +474,12 @@ const VotingDashboard = () => {
                           )}
                         </Draggable>
                       ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+              )}
             </div>
 
             {/* Sticky Save CTA with Christmas style */}
@@ -496,12 +508,6 @@ const VotingDashboard = () => {
             </div>
         </div>
 
-        {/* Footer note */}
-        <div className="pt-6 pb-8 text-center text-[11px] text-slate-300 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent rounded-t-2xl">
-          <span className="inline-flex items-center gap-1">
-            <CandyCane className="h-3 w-3" /> Sweet holiday voting ✨
-          </span>
-        </div>
 
         {/* Confetti */}
         {showConfetti && <ConfettiBurst />}
@@ -509,38 +515,6 @@ const VotingDashboard = () => {
     </div>
   );
 };
-
-// Floating Particles component - Chrismukkah Edition
-function FloatingParticles() {
-  const emojis = ['❄️', '🕎', '🧁', '🍬'];
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    delay: Math.random() * 5,
-    duration: 10 + Math.random() * 10,
-    size: 16 + Math.random() * 24,
-    emoji: emojis[i % emojis.length],
-  }));
-
-  return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          className="absolute animate-snow-fall opacity-30"
-          style={{
-            left: `${p.left}%`,
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-            fontSize: `${p.size}px`,
-          }}
-        >
-          {p.emoji}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 // Confetti component
 function ConfettiBurst() {
@@ -567,6 +541,13 @@ function ConfettiBurst() {
         @keyframes confetti-fall {
           0% { transform: translateY(0) rotate(0); opacity: 1; }
           100% { transform: translateY(-180px) rotate(200deg); opacity: 0; }
+        }
+        @keyframes fade-in {
+          0% { opacity: 0; transform: translateY(10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 300ms ease-out;
         }
       `}</style>
     </div>
