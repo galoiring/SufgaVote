@@ -364,33 +364,27 @@ const VotingDashboard = () => {
           <VotingCountdownBanner votingEndsAt={votingEndsAt} votingOpen={votingOpen} />
         </header>
 
-        {/* Jewish Santa Mascot */}
-        <div className="text-center mb-2 relative pt-4">
-          <div className="text-6xl drop-shadow-lg filter animate-bounce-slow">🎅</div>
+        {/* Jewish Santa Mascot & Title */}
+        <div className="text-center mb-1 relative pt-4">
+          <div className="text-5xl drop-shadow-lg filter animate-bounce-slow">🎅</div>
           {/* Kippah overlay */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 -mt-1 w-6 h-3 bg-blue-600 rounded-t-full opacity-90"></div>
-          <p className="text-blue-200 font-medium text-xs mt-1">"Ho Ho... Oy Vey! Vote now!"</p>
-        </div>
-
-        {/* Page title */}
-        <div className="mt-4 text-center">
-          <h2 className="text-lg font-semibold">Vote for Your Favorites!</h2>
+          <p className="text-blue-200 font-medium text-xs mt-1">"Ho Ho... Oy Vey! Rank them all!"</p>
         </div>
 
         {!votingOpen && (
-          <div className="mt-3 p-3 rounded-xl bg-blue-500/10 border border-blue-300/20 text-center text-sm text-blue-200">
-            Voting is currently closed. Please wait for the organizer to open voting.
+          <div className="mt-4 p-3 rounded-xl bg-blue-500/10 border border-blue-300/20 text-center text-sm text-blue-200">
+            Voting is currently closed
           </div>
         )}
 
         {/* VOTING SECTION */}
-        <div className="mt-3 space-y-3">
+        <div className="mt-4 space-y-3">
             {/* Ranking list */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
-              <h3 className="text-base font-semibold mb-1">Rank Sufganiot ({category})</h3>
               <div className="flex items-center justify-between text-xs text-slate-300 mb-3">
-                <span>Drag the handle to reorder. Top = Best, Bottom = Least favorite</span>
-                <span className="text-slate-200">{rankings[category].length} entries</span>
+                <span>Drag to reorder • Top = Best</span>
+                <span className="text-slate-200 font-medium">{rankings[category].length} items</span>
               </div>
 
               <DragDropContext onDragEnd={handleDragEnd}>
