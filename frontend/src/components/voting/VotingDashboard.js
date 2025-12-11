@@ -439,11 +439,12 @@ const VotingDashboard = () => {
                               style={{
                                 ...provided.draggableProps.style,
                                 touchAction: 'none',
+                                animationDelay: `${index * 50}ms`,
                               }}
-                              className={`flex items-center gap-3 rounded-xl p-3 shadow transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${
+                              className={`flex items-center gap-3 rounded-xl p-3 transition-all duration-200 animate-ranking-item ${
                                 snapshot.isDragging
-                                  ? 'backdrop-blur-md bg-white/20 border-2 border-white/40 text-white ring-2 ring-blue-300/60 scale-[1.02] rotate-1'
-                                  : 'backdrop-blur-md bg-white/10 border border-white/20 text-white'
+                                  ? 'backdrop-blur-md bg-white/30 border-2 border-white/50 text-white shadow-2xl scale-105 rotate-2 cursor-grabbing z-50'
+                                  : 'backdrop-blur-md bg-white/10 border border-white/20 text-white shadow-md hover:shadow-lg hover:bg-white/15 cursor-grab active:cursor-grabbing'
                               }`}
                             >
                               <div className={`rounded-lg px-2 py-1 text-base font-bold shrink-0 border ${
@@ -589,11 +590,24 @@ function ConfettiBurst() {
             filter: blur(4px);
           }
         }
+        @keyframes ranking-item-enter {
+          0% {
+            opacity: 0;
+            transform: translateY(20px) translateX(-10px) scale(0.9);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+          }
+        }
         .animate-slide-in {
           animation: slide-in 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .animate-slide-out {
           animation: slide-out 300ms cubic-bezier(0.4, 0, 1, 1);
+        }
+        .animate-ranking-item {
+          animation: ranking-item-enter 400ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
         }
       `}</style>
     </div>
