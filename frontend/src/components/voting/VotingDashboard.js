@@ -40,13 +40,19 @@ const VotingDashboard = () => {
   }, []);
 
   const handleCategoryChange = (newCategory) => {
-    if (newCategory === category) return;
+    if (newCategory === category || isTransitioning) return;
 
     setIsTransitioning(true);
+
+    // Wait for slide-out animation
     setTimeout(() => {
       setCategory(newCategory);
+    }, 350);
+
+    // Reset transition state after slide-in completes
+    setTimeout(() => {
       setIsTransitioning(false);
-    }, 300);
+    }, 900);
   };
 
   const loadData = async () => {
@@ -427,7 +433,15 @@ const VotingDashboard = () => {
                 <DragDropContext onDragEnd={handleDragEnd}>
                   <Droppable droppableId="rankings">
                     {(provided) => (
-                      <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className="space-y-2 max-h-[calc(100vh-28rem)] overflow-y-auto overflow-x-hidden pr-1 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30"
+                        style={{
+                          scrollbarWidth: 'thin',
+                          scrollbarColor: 'rgba(255,255,255,0.2) transparent'
+                        }}
+                      >
                         {rankings[category].map((sufgania, index) => (
                         <Draggable
                           key={sufgania._id || sufgania.id}
