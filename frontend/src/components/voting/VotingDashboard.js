@@ -30,6 +30,7 @@ const VotingDashboard = () => {
   const [saving, setSaving] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [submittedCategories, setSubmittedCategories] = useState(new Set());
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -37,6 +38,16 @@ const VotingDashboard = () => {
     loadData();
     // eslint-disable-next-line
   }, []);
+
+  const handleCategoryChange = (newCategory) => {
+    if (newCategory === category) return;
+
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCategory(newCategory);
+      setIsTransitioning(false);
+    }, 300);
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -309,7 +320,7 @@ const VotingDashboard = () => {
           <div className="px-4 pb-3">
             <div className="grid grid-cols-3 gap-2 bg-white/5 border border-white/10 rounded-xl p-1">
               <button
-                onClick={() => setCategory('taste')}
+                onClick={() => handleCategoryChange('taste')}
                 className={`relative flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-200 active:scale-95 ${
                   category === 'taste'
                     ? 'bg-blue-500/20 border-blue-300/20 text-slate-50'
@@ -327,7 +338,7 @@ const VotingDashboard = () => {
                 <span className="font-medium text-xs">Taste</span>
               </button>
               <button
-                onClick={() => setCategory('creativity')}
+                onClick={() => handleCategoryChange('creativity')}
                 className={`relative flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-200 active:scale-95 ${
                   category === 'creativity'
                     ? 'bg-pink-500/20 border-pink-300/20 text-slate-50'
@@ -345,7 +356,7 @@ const VotingDashboard = () => {
                 <span className="font-medium text-xs">Creativity</span>
               </button>
               <button
-                onClick={() => setCategory('presentation')}
+                onClick={() => handleCategoryChange('presentation')}
                 className={`relative flex flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm border transition-all duration-200 active:scale-95 ${
                   category === 'presentation'
                     ? 'bg-amber-500/20 border-amber-300/20 text-slate-50'
@@ -387,11 +398,13 @@ const VotingDashboard = () => {
         )}
 
         {/* VOTING SECTION */}
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-3 relative overflow-hidden">
             {/* Ranking list */}
             <div
               key={category}
-              className={`bg-white/5 border-2 rounded-2xl p-4 transition-all duration-300 animate-fade-in ${
+              className={`bg-white/5 border-2 rounded-2xl p-4 transition-all duration-500 ${
+                isTransitioning ? 'animate-slide-out' : 'animate-slide-in'
+              } ${
                 category === 'taste' ? 'border-blue-500/30' :
                 category === 'creativity' ? 'border-pink-500/30' :
                 'border-amber-500/30'
@@ -552,12 +565,35 @@ function ConfettiBurst() {
           0% { transform: translateY(0) rotate(0); opacity: 1; }
           100% { transform: translateY(-180px) rotate(200deg); opacity: 0; }
         }
-        @keyframes fade-in {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
+        @keyframes slide-in {
+          0% {
+            opacity: 0;
+            transform: translateX(100%) scale(0.95);
+            filter: blur(4px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0);
+          }
         }
-        .animate-fade-in {
-          animation: fade-in 300ms ease-out;
+        @keyframes slide-out {
+          0% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateX(-100%) scale(0.95);
+            filter: blur(4px);
+          }
+        }
+        .animate-slide-in {
+          animation: slide-in 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .animate-slide-out {
+          animation: slide-out 300ms cubic-bezier(0.4, 0, 1, 1);
         }
       `}</style>
     </div>
