@@ -436,11 +436,7 @@ const VotingDashboard = () => {
                       <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        className="space-y-2 max-h-[calc(100vh-20rem)] overflow-y-auto overflow-x-hidden pr-1 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30"
-                        style={{
-                          scrollbarWidth: 'thin',
-                          scrollbarColor: 'rgba(255,255,255,0.2) transparent'
-                        }}
+                        className="space-y-2"
                       >
                         {rankings[category].map((sufgania, index) => (
                         <Draggable
