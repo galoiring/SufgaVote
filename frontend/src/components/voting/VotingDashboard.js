@@ -396,7 +396,7 @@ const VotingDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <div className="mx-auto w-full max-w-[480px] px-4 pb-24">
+      <div className="mx-auto w-full max-w-[480px] px-4 pb-20">
         {!votingOpen && (
           <div className="mt-4 p-3 rounded-xl bg-blue-500/10 border border-blue-300/20 text-center text-sm text-blue-200">
             Voting is currently closed
@@ -436,7 +436,7 @@ const VotingDashboard = () => {
                       <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        className="space-y-2 max-h-[calc(100vh-28rem)] overflow-y-auto overflow-x-hidden pr-1 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30"
+                        className="space-y-2 max-h-[calc(100vh-20rem)] overflow-y-auto overflow-x-hidden pr-1 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30"
                         style={{
                           scrollbarWidth: 'thin',
                           scrollbarColor: 'rgba(255,255,255,0.2) transparent'
@@ -458,7 +458,7 @@ const VotingDashboard = () => {
                                 touchAction: 'none',
                                 animationDelay: `${index * 50}ms`,
                               }}
-                              className={`flex items-center gap-3 rounded-xl p-3 transition-all duration-200 animate-ranking-item ${
+                              className={`flex items-center gap-2.5 rounded-xl p-2.5 transition-all duration-200 animate-ranking-item ${
                                 snapshot.isDragging
                                   ? 'backdrop-blur-md bg-white/30 border-2 border-white/50 text-white shadow-2xl scale-105 rotate-2 cursor-grabbing z-50'
                                   : 'backdrop-blur-md bg-white/10 border border-white/20 text-white shadow-md hover:shadow-lg hover:bg-white/15 cursor-grab active:cursor-grabbing'
@@ -495,9 +495,9 @@ const VotingDashboard = () => {
                                 </div>
                               )}
 
-                              <div className="flex-1 min-w-0">
-                                <div className="font-semibold leading-tight truncate">{sufgania.name}</div>
-                                <div className="text-[12px] text-slate-300 truncate">
+                              <div className="flex-1 min-w-0 pr-2">
+                                <div className="font-semibold leading-tight text-sm break-words">{sufgania.name}</div>
+                                <div className="text-[11px] text-slate-300 truncate">
                                   by {sufgania.couple?.coupleName || 'Unknown'}
                                 </div>
                               </div>
@@ -524,12 +524,12 @@ const VotingDashboard = () => {
             </div>
 
             {/* Sticky Save CTA */}
-            <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/98 to-transparent pt-6 pb-4">
+            <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/98 to-transparent pt-4 pb-3">
               <div className="mx-auto max-w-[480px] px-4">
                 <button
                   onClick={handleSaveRankings}
                   disabled={!votingOpen || saving}
-                  className="w-full h-14 rounded-xl text-base font-semibold shadow-2xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
+                  className="w-full h-12 rounded-xl text-base font-semibold shadow-2xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {saving ? (
