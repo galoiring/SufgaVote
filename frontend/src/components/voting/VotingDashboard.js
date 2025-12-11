@@ -8,12 +8,12 @@ import { toast } from 'sonner';
 import VotingCountdownBanner from './VotingCountdownBanner';
 import {
   LogOut,
-  CandyCane,
   ImageIcon,
   Flame,
   Sparkles,
   Trophy,
   Check,
+  GripVertical,
 } from 'lucide-react';
 
 const VotingDashboard = () => {
@@ -390,7 +390,7 @@ const VotingDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <div className="mx-auto w-full max-w-[480px] px-4 pb-28">
+      <div className="mx-auto w-full max-w-[480px] px-4 pb-24">
         {!votingOpen && (
           <div className="mt-4 p-3 rounded-xl bg-blue-500/10 border border-blue-300/20 text-center text-sm text-blue-200">
             Voting is currently closed
@@ -411,7 +411,10 @@ const VotingDashboard = () => {
               }`}
             >
               <div className="flex items-center justify-between text-xs text-slate-300 mb-3">
-                <span>Drag to reorder • Top = Best</span>
+                <div className="flex items-center gap-1.5">
+                  <GripVertical className="w-3.5 h-3.5 opacity-50" />
+                  <span>Drag to reorder • Best on top</span>
+                </div>
                 <span className="text-slate-200 font-medium">{rankings[category].length} items</span>
               </div>
 
@@ -488,11 +491,11 @@ const VotingDashboard = () => {
                               <div
                                 {...provided.dragHandleProps}
                                 style={{ touchAction: 'none' }}
-                                className={`text-red-400 hover:text-red-500 cursor-move p-3 -m-1 ${
-                                  !votingOpen ? 'opacity-50 cursor-not-allowed' : ''
+                                className={`text-slate-400 hover:text-slate-200 cursor-move p-2 -m-1 transition-colors ${
+                                  !votingOpen ? 'opacity-30 cursor-not-allowed' : 'opacity-60 hover:opacity-100'
                                 }`}
                               >
-                                <CandyCane className="w-7 h-7 rotate-180" />
+                                <GripVertical className="w-6 h-6" />
                               </div>
                             </div>
                           )}
@@ -506,13 +509,13 @@ const VotingDashboard = () => {
               )}
             </div>
 
-            {/* Sticky Save CTA with Christmas style */}
-            <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#0a1628] via-[#0a1628]/95 to-transparent">
-              <div className="mx-auto max-w-[480px] px-4 py-4">
+            {/* Sticky Save CTA */}
+            <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/98 to-transparent pt-6 pb-4">
+              <div className="mx-auto max-w-[480px] px-4">
                 <button
                   onClick={handleSaveRankings}
                   disabled={!votingOpen || saving}
-                  className="snow-cap w-full h-12 rounded-xl text-base shadow-lg bg-red-600 hover:bg-red-700 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
+                  className="w-full h-14 rounded-xl text-base font-semibold shadow-2xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {saving ? (
