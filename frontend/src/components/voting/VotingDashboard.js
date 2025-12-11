@@ -277,7 +277,7 @@ const VotingDashboard = () => {
           {/* Footer note */}
           <div className="pt-6 pb-8 text-center text-[11px] text-slate-300 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent rounded-t-2xl">
             <span className="inline-flex items-center gap-1">
-              <CandyCane className="h-3 w-3" /> Thanks for participating! ✨
+              <Trophy className="h-3 w-3" /> Thanks for participating! ✨
             </span>
           </div>
         </div>
